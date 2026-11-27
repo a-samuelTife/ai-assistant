@@ -18,3 +18,19 @@ services:
     mem_limit: 128m
     cpus: 0.5
     restart: unless-stopped
+  connector:
+    build: ./connector
+    image: connector:dev
+    ports:
+      - "${CONNECTOR_PORT:?CONNECTOR_PORT is not set}:5000"
+    environment:
+      PORT: 5000
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:5000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    mem_limit: 128m
+    cpus: 0.5
+    restart: unless-stopped
